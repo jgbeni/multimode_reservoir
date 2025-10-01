@@ -6,7 +6,7 @@ import scipy.linalg as sla
 from tqdm import tqdm
 
 class MultiModeReservoir:
-    def __init__(self,N,n,input_enc='phase',type_=0,lambda_central=1560e-9,steps_=500,delta_amp = 1e-16,seed = 42):
+    def __init__(self,N,n,input_enc='phase',type_=0,lambda_central=1560e-9,steps_=500,delta_amp = 1e-18,seed = 42):
         np.random.seed(seed)
         
         self.obs_size = int(0.5*n*(n+1)) # Size of the observables vector (measuring x-quadratures only)
@@ -57,7 +57,7 @@ class MultiModeReservoir:
                 self.beta = 2.*np.random.rand(N)-1.
             elif input_enc == 'amplitude':
                 self.alpha = .5*np.random.rand(N)
-        self.redo_amplitude_phase = redo_alpha_beta
+        self.redo_alpha_beta = redo_alpha_beta
 
         # Get mask matrix
         self.mask_matr = np.random.rand(N,n)
@@ -86,7 +86,8 @@ class MultiModeReservoir:
         
         # Define the function to plot modes
         def plot_modes(input):
-            result = exeCore(input)
+            amplitude,phase = self.get_amplitude_phase(input)
+            result = exeCore(amplitude,phase)
             modes = [(result.signal_temporal_modes[:, i]) for i in range(n)]
             for mode in range(min(n,5)):
                 plt.plot(modes[mode][steps_//2-self.len_mat//2:steps_//2+self.len_mat//2], label=f'mode {mode}')
@@ -150,6 +151,7 @@ class MultiModeReservoir:
             print("Initial conditions washed out.")
 
             print("Injecting static input...")
+            # we have to include the initial feedback vector feedback_0
             X, _ = self.get_reservoir_sequence(u_static, mask_scale=mask_scale, feedback_0=feedback)
 
             for i in range(min(6,X.shape[1])):

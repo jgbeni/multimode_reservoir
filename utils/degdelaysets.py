@@ -1,10 +1,11 @@
-#!/usr/bin/env python
-# coding: utf-8
+# CODE TAKEN FROM https://github.com/kubota0130/ipc.git
+# WARNING: IT REQUIRES PYTHON 3.8 TO PROPERLY RUN
+
 import numpy as np
 import sys,os
 
 class single_input_degdelaysets:
-	def __init__(self,distr=None,zerobased=True,basedir='../utils'):
+	def __init__(self,distr=None,zerobased=True,basedir='./'):
 		self.zerobased = zerobased
 		self.str0based =  '_%dbased'%(0 if zerobased==True else 1)
 		self.distr = distr
@@ -71,13 +72,13 @@ class single_input_degdelaysets:
 		return threshold_index
 
 	def sort_degdelayset(self,degdelayset):
-		ddset = np.array(degdelayset)
+		ddset = np.array(degdelayset,dtype=object)
 		ddset = ddset[np.argsort(ddset[:,1])]
 		ddset = ddset[np.argsort(ddset[:,0])]
 		return ddset.tolist()
 
 	def make_degdelaysets(self,deg,delay):
-		print('Making degdelaysets of %d-order %d-delay'%(deg,delay))
+		#print('Making degdelaysets of %d-order %d-delay'%(deg,delay))
 
 		##### Make families of sets of degrees
 		degsets = []
@@ -113,5 +114,5 @@ class single_input_degdelaysets:
 														  threshold_index=threshold_index)
 
 	def make_binary_degdelaysets(self,degree,delay):
-		print('Usage: binary input')
+		#print('Usage: binary input')
 		sys.exit()
