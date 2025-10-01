@@ -1,8 +1,8 @@
 import numpy as np
 from utils.degdelaysets import single_input_degdelaysets
-from scipy.special import legendre
-from tqdm import tqdm
-from sklearn.linear_model import LinearRegression
+from scipy.special import legendre # type: ignore
+from tqdm import tqdm # type: ignore
+from sklearn.linear_model import LinearRegression # type: ignore
 
 # compute normalized legendre polynomial of x with degree d
 def legendre_poly(x,d):
